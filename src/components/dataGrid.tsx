@@ -22,7 +22,7 @@ EmptyState.displayName = 'EmptyState'
 
 const CricketerCard = React.memo(({ name }: { name: string }) => (
     <div
-        className='bg-gradient-to-br from-gray-800 to-black text-white font-semibold p-6 m-2 rounded-lg shadow-lg shadow-gray-500/30 hover:shadow-2xl hover:shadow-gray-400/40 transition-all duration-300 h-32 w-64 flex justify-center items-center text-center transform hover:-translate-y-1'
+        className='bg-gradient-to-br from-gray-800 to-black font-semibold p-6 m-2 rounded-lg shadow-lg shadow-gray-500/30 hover:shadow-2xl hover:shadow-gray-400/40 transition-all duration-300 h-32 w-64 flex justify-center items-center text-center transform hover:-translate-y-1'
         role='listitem'
         tabIndex={0}
     >
@@ -38,8 +38,8 @@ const DataGrid = React.memo(({ cricketersList }: DataGridProps) => {
     }
 
     return (
-        <div 
-            className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-items-center items-center p-4'
+        <div
+            className='mt-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  xl:grid-cols-5  2xl:grid-cols-6 gap-4 justify-items-center items-center p-1'
             role='list'
             aria-label={`${cricketersList.length} cricketers found`}
         >

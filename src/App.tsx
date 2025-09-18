@@ -30,6 +30,14 @@ function App() {
         return newCricketersList
     }
 
+				let timer: NodeJS.Timeout | null = null 
+    const debounce = (fn: (...args: any[]) => void, delay: number) => {
+        return (...args: any[]) => {
+            if (timer) clearTimeout(timer)
+            timer = setTimeout(() => fn(...args), delay)
+        }
+    }
+
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value === '' && currentSearch !== '') {
             if (checkboxList.includes(currentSearch)) return
@@ -43,7 +51,9 @@ function App() {
         const newCricketersList = filterCricketers(e.target.value, searchList)
         setCricketersList(newCricketersList)
         setCurrentSearch(e.target.value)
-    }
+				}
+	
+    const debouncedHandleSearch = debounce(handleSearch, 500)
 
     const handleCheckbox = (e: React.FormEvent<HTMLInputElement>) => {
         let newSearchList = []
@@ -58,12 +68,16 @@ function App() {
     }
 
     return (
-        <div className='App  bg-gray-500'>
-            <SearchBar handleSearch={handleSearch} />
+        <div className='App bg-[#282c30] h-screen overflow-y-auto text-white'>
+            <SearchBar handleSearch={debouncedHandleSearch} />
             <Filters
                 checkboxList={checkboxList}
                 handleCheckbox={handleCheckbox}
             />
+            <div className='sm:text-xl md:text-2xl lg:text-3xl font-bold sm:p-0 md:pb-2'>
+                Total Cricketers: {cricketersList.length}
+            </div>
+
             <DataGrid cricketersList={cricketersList} />
         </div>
     )

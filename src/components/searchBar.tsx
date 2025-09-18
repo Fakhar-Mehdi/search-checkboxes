@@ -4,11 +4,11 @@ interface SearchBarProps {
 
 const SearchBar = ({ handleSearch }: SearchBarProps) => {
     return (
-        <div className='w-full col-span-full flex justify-center'>
+        <div className='col-span-full flex justify-center pt-8 fixed text-black sm:text-sm  md:text-2xl z-10 w-screen'>
             <input
                 type='search'
                 placeholder='Search'
-                className='block w-full max-w-md p-4 m-2 rounded'
+                className='m-2 w-[70%] text-center rounded-[1rem] p-1 lg:p-2'
                 onChange={handleSearch}
             />
         </div>
