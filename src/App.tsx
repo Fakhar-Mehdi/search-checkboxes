@@ -30,13 +30,7 @@ function App() {
         return newCricketersList
     }
 
-				let timer: NodeJS.Timeout | null = null 
-    const debounce = (fn: (...args: any[]) => void, delay: number) => {
-        return (...args: any[]) => {
-            if (timer) clearTimeout(timer)
-            timer = setTimeout(() => fn(...args), delay)
-        }
-    }
+	
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value === '' && currentSearch !== '') {
@@ -53,7 +47,6 @@ function App() {
         setCurrentSearch(e.target.value)
 				}
 	
-    const debouncedHandleSearch = debounce(handleSearch, 500)
 
     const handleCheckbox = (e: React.FormEvent<HTMLInputElement>) => {
         let newSearchList = []
@@ -69,7 +62,7 @@ function App() {
 
     return (
         <div className='App bg-[#282c30] h-screen overflow-y-auto text-white'>
-            <SearchBar handleSearch={debouncedHandleSearch} />
+            <SearchBar handleSearch={handleSearch} />
             <Filters
                 checkboxList={checkboxList}
                 handleCheckbox={handleCheckbox}

@@ -9,7 +9,7 @@ const Filters = ({ checkboxList, handleCheckbox }: FiltersProps) => {
     return (
         <div className='flex justify-center items-center gap-4 mb-5 mt-[85px] md:mt-28 lg:mt-32'>
             {checkboxList.map((checkbox: string) => (
-                <div key={checkbox} className=''>
+                <div key={checkbox}>
                     <label
                         htmlFor={checkbox}
                         className='sm:text-sm md:text-xl lg:text-2xl'
