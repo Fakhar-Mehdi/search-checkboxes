@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
-const MAX_TAGS = 10
+import React, { useCallback, useState } from 'react'
+import { debounce } from '../utils/helper'
+import { DEBOUNCE_DELAY, MAX_TAGS } from '../constants'
 
 const useSearchCricketers = (cricketers: string[]) => {
     const [cricketersList, setCricketersList] = useState(cricketers)
@@ -7,57 +8,71 @@ const useSearchCricketers = (cricketers: string[]) => {
     const [currentSearch, setCurrentSearch] = useState('')
     const [searchList, setSearchList] = useState<string[]>([])
 
-    const filterCricketers = (
-        searchBarValue: string,
-        searchItems: string[]
-    ) => {
-        if (searchItems.includes('all')) return cricketers
+    const filterCricketers = useCallback(
+        (searchBarValue: string, searchItems: string[]) => {
+            if (searchItems.includes('all')) return cricketers
 
-        let newCricketersList = cricketers.filter((c) =>
-            c.toLowerCase().includes(searchBarValue.toLowerCase())
-        )
+            const newSearchItems = [...searchItems]
+            if (searchBarValue) newSearchItems.push(searchBarValue)
+            if (!newSearchItems.length) return cricketers
 
-        for (let searchItem of searchItems) {
-            newCricketersList = newCricketersList.filter((item) =>
-                item.toLowerCase().includes(searchItem.toLowerCase())
+            let newCricketersList: string[] = cricketers.filter((c) =>
+                newSearchItems.every((i) =>
+                    c.toLowerCase().includes(i.toLowerCase())
+                )
             )
-        }
 
-        return newCricketersList
-    }
+            return newCricketersList
+        },
+        [cricketers]
+    )
 
-    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value === '' && currentSearch !== '') {
-            if (checkboxList.includes(currentSearch)) return
-            let newCheckboxList = [...checkboxList, currentSearch]
-            if (newCheckboxList.length >= MAX_TAGS)
-                newCheckboxList = newCheckboxList.filter((_, idx) => idx !== 1)
+    const handleSearch = useCallback(
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            if (e.target.value === '' && currentSearch !== '') {
+                if (checkboxList.includes(currentSearch)) return
 
-            setCheckboxList(newCheckboxList)
-        }
+                let newCheckboxList = [...checkboxList, currentSearch]
+                if (newCheckboxList.length >= MAX_TAGS)
+                    newCheckboxList = newCheckboxList.filter(
+                        (_, idx) => idx !== 1
+                    )
 
-        const newCricketersList = filterCricketers(e.target.value, searchList)
-        setCricketersList(newCricketersList)
-        setCurrentSearch(e.target.value)
-    }
+                setCheckboxList(newCheckboxList)
+            }
 
-    const handleCheckbox = (e: React.FormEvent<HTMLInputElement>) => {
-        let newSearchList = []
-        const { checked, value } = e.currentTarget
+            const newCricketersList = filterCricketers(
+                e.target.value,
+                searchList
+            )
+            setCricketersList(newCricketersList)
+            setCurrentSearch(e.target.value)
+        },
+        [currentSearch, checkboxList, searchList, filterCricketers]
+    )
 
-        if (checked) newSearchList = [...searchList, value]
-        else newSearchList = searchList.filter((item) => item !== value)
+    const handleCheckbox = useCallback(
+        (e: React.FormEvent<HTMLInputElement>) => {
+            let newSearchList = []
+            const { checked, value } = e.currentTarget
 
-        const newCricketersList = filterCricketers(currentSearch, newSearchList)
-        setCricketersList(newCricketersList)
-        setSearchList(newSearchList)
-				}
-	
-	return {
-        handleSearch,
-		checkboxList,
-		handleCheckbox, 
-								cricketersList
+            if (checked) newSearchList = [...searchList, value]
+            else newSearchList = searchList.filter((item) => item !== value)
+            const newCricketersList = filterCricketers(
+                currentSearch,
+                newSearchList
+            )
+            setCricketersList(newCricketersList)
+            setSearchList(newSearchList)
+        },
+        [currentSearch, searchList, filterCricketers]
+    )
+
+    return {
+        handleSearch: debounce(handleSearch, DEBOUNCE_DELAY),
+        checkboxList,
+        handleCheckbox,
+        cricketersList,
     }
 }
 

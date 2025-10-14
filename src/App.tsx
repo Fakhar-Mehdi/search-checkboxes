@@ -6,9 +6,8 @@ import DataGrid from './components/dataGrid'
 import useSearchCricketers from './hooks/useSearchCricketers'
 
 function App() {
-
-	
-	const { handleSearch, checkboxList, handleCheckbox, cricketersList } = useSearchCricketers(cricketers)
+    const { handleSearch, checkboxList, handleCheckbox, cricketersList } =
+        useSearchCricketers(cricketers)
 
     return (
         <div className='App bg-[#282c30] h-screen overflow-y-auto text-white'>
